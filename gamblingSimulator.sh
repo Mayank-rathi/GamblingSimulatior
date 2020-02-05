@@ -1,4 +1,4 @@
-##!/bin/bash 
+#!/bin/bash 
 echo "Welcome To Gambling Simulator"
 
 #Constant
@@ -25,36 +25,39 @@ do
 		if [ $((RANDOM%2)) -eq 1 ]
 		then
 			cash=$((cash+BET))
-	else
+		else
 			cash=$((cash-BET))	
-	fi	
+		fi	
 	done
-chekingForMonth
+gamblerDict[$i]=$(($cash-$STAKE))
 done
 }
 
-function chekingForMonth(){
-	if(($cash > $STAKE))
-	then
-		win=$((cash-STAKE))
-		amount=$((win+amount))
-		echo "day $i win" $win
-		((winCount++))
-	elif(($cash < $STAKE))
-	then
-		loose=$((STAKE-cash))
-		amount=$((amount-loose))
-		echo "day $i loose" $loose
-		((looseCount++))
-	fi
+function addVal(){
+	i=2
+   while ((i<=20))
+   do
+      gamblerDict[$i]=$((${gamblerDict[$i]}+${gamblerDict[$((i-1))]}))
+      ((i++))
+   done
+   echo  ${!gamblerDict[@]}
+   echo  ${gamblerDict[@]}
+}
+
+function checkLuck() {
+addVal
+	echo "Luckiest day : "
+	for day in ${!gamblerDict[@]}
+	do
+	  echo $day ${gamblerDict[$day]}
+	done | sort -k2 -rn | head -1
+
+	echo "unluckiest day"
+	for day in ${!gamblerDict[@]}
+	do
+      echo $day ${gamblerDict[$day]}
+	done | sort -k2 -n | head -1
 }
 gambler
-if(($winCount>$looseCount))
-then
-	echo "wins amount" $win
-else
-	echo "loose amount" $loose
-fi
-
-
+checkLuck
 

@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash  
 echo "Welcome To Gambling Simulator"
 
 #Constant
@@ -29,10 +29,11 @@ do
 			cash=$((cash-BET))	
 		fi	
 	done
+#Adding values in dictionary named gamblerDict
 gamblerDict[$i]=$(($cash-$STAKE))
 done
 }
-
+#Adding daily amount that is win or loss 
 function addVal(){
 	i=2
    while ((i<=20))
@@ -43,9 +44,9 @@ function addVal(){
    echo  ${!gamblerDict[@]}
    echo  ${gamblerDict[@]}
 }
-
+#checking the day where amount is greatest or lowest
 function checkLuck() {
-addVal
+	addVal
 	echo "Luckiest day : "
 	for day in ${!gamblerDict[@]}
 	do
@@ -58,6 +59,19 @@ addVal
       echo $day ${gamblerDict[$day]}
 	done | sort -k2 -n | head -1
 }
+function checkNextMonthForGambling()
+{
+	if [[ ${gamblerDict[$((i-1))]} -gt 0 ]]
+	then
+		echo "You Are In Next Month For Gambling"
+		main
+	else
+		echo "Sorry You Loose Your Cash Better Luck Next Time"
+	fi
+}
+function main(){
 gambler
 checkLuck
-
+checkNextMonthForGambling
+}
+main

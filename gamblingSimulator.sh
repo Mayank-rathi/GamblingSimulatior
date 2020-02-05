@@ -1,36 +1,60 @@
-#!/bin/bash 
+##!/bin/bash 
 echo "Welcome To Gambling Simulator"
 
-declare -A winloose
 #Constant
 BET=1
+STAKE=100
 
 #Variables
-stake=100
 win=0
 loose=0
-#Calculating win and loose for 20 days
+amount=0
+looseCount=0
+winCount=0
+#calculatin minimum and maximum value of stake 
+minimum_value=$((STAKE*50/100))
+maximum_value=$((STAKE+minimum_value)) 
+
+
+function gambler(){
 for((i=1;i<=20;i++))
 do
-stake=100
-pre=$stake
-minimum=$(($stake*50/100))
-maximum=$(($stake+$minimum)) 
-while(($stake > $minimum)) && (($stake < $maximum))
-do
-	if [ $((RANDOM%2)) -eq 1 ]
-	then
-		((win++))
-		((stake++))
+   cash=$STAKE
+	while(($cash > $minimum_value)) && (($cash < $maximum_value))
+	do
+		if [ $((RANDOM%2)) -eq 1 ]
+		then
+			cash=$((cash+BET))
 	else
-		((loose++))
-		((stake--))
+			cash=$((cash-BET))	
+	fi	
+	done
+chekingForMonth
+done
+}
+
+function chekingForMonth(){
+	if(($cash > $STAKE))
+	then
+		win=$((cash-STAKE))
+		amount=$((win+amount))
+		echo "day $i win" $win
+		((winCount++))
+	elif(($cash < $STAKE))
+	then
+		loose=$((STAKE-cash))
+		amount=$((amount-loose))
+		echo "day $i loose" $loose
+		((looseCount++))
 	fi
-done
-	if(($stake> pre))
-	then
-		echo "day $i win by " $((stake-pre))
-	else
-		echo "day $i loose by " $((pre-stake))
-	fi		
-done
+}
+gambler
+if(($winCount>$looseCount))
+then
+	echo "wins amount" $win
+else
+	echo "loose amount" $loose
+fi
+
+
+
